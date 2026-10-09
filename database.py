@@ -3,6 +3,25 @@ import sqlite3
 def create_connection():
     return sqlite3.connect("tickets.db")
 
+def create_table():
+
+    connection = create_connection()
+    cursor = connection.cursor()
+
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS tickets (
+            ticket_id INTERGER PRIMARY KEY,
+            customer_name TEXT NOT NULL,
+            message TEXT NOT NULL,
+            category TEXT NOT NULL,
+            priority TEXT NOT NULL,
+            status TEXT NOT NULL
+            )
+            """)
+
+    connection.commit()
+    connection.close()
+
 def add_ticket(ticket):
 
     connection = create_connection()

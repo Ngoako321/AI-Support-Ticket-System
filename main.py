@@ -2,11 +2,13 @@ from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 from ticket import Ticket
 from manager import TicketManager
-from database import (add_ticket, get_all_tickets, get_ticket, update_ticket_status as update_status_in_database, delete_ticket as delete_ticket_from_database, ticket_exists)
+from database import (add_ticket, get_all_tickets, get_ticket, update_ticket_status as update_status_in_database, delete_ticket as delete_ticket_from_database, ticket_exists, create_table)
 
 app = FastAPI()
 
 manager = TicketManager()
+
+create_table()
 
 class TicketRequest(BaseModel):
     ticket_id: int 
@@ -38,8 +40,8 @@ def create_ticket(ticket_data:TicketRequest):
     )
 
     manager.add_ticket(ticket)
-
     add_ticket(ticket)
+
 
     return {
         "message": "Ticket created successfully",
