@@ -1,11 +1,7 @@
 import sqlite3
 
 def create_connection():
-    return sqlite3.connect("tickets.db")
-
-def create_table():
-
-    connection = create_connection()
+    connection = sqlite3.connect("tickets.db")
     cursor = connection.cursor()
 
     cursor.execute("""
@@ -16,10 +12,15 @@ def create_table():
             category TEXT NOT NULL,
             priority TEXT NOT NULL,
             status TEXT NOT NULL
-            )
-            """)
+        )
+    """)
 
     connection.commit()
+    return connection
+
+
+def create_table():
+    connection = create_connection()
     connection.close()
 
 def add_ticket(ticket):
