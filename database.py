@@ -10,7 +10,7 @@ def create_table():
 
     cursor.execute("""
         CREATE TABLE IF NOT EXISTS tickets (
-            ticket_id INTERGER PRIMARY KEY,
+            ticket_id INTEGER PRIMARY KEY,
             customer_name TEXT NOT NULL,
             message TEXT NOT NULL,
             category TEXT NOT NULL,
