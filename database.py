@@ -1,138 +1,90 @@
-import sqlite3
-from pathlib import Path
+import os 
+import psycopg
 
-DB_PATH = Path(__file__).resolve().parent / "tickets.db"
+DATABASE_URL = os.environ.get("DATABASE_URL")
 
 
 def create_connection():
-    connection = sqlite3.connect(DB_PATH)
-    cursor = connection.cursor()
-
-    cursor.execute("""
-        CREATE TABLE IF NOT EXISTS tickets (
-            ticket_id INTEGER PRIMARY KEY,
-            customer_name TEXT NOT NULL,
-            message TEXT NOT NULL,
-            category TEXT NOT NULL,
-            priority TEXT NOT NULL,
-            status TEXT NOT NULL
+    if not DATABASE_URL:
+        raise RuntimeError(
+            "DATABASE_URL environment variable is not configured."
         )
-    """)
 
-    connection.commit()
-    return connection
-
+    return psycopg.connect(DATABASE_URL)
 
 
 def create_table():
-    connection = create_connection()
-    connection.close()
+    with create_connection() as connection:
+        connection.execute("""
+            CREATE TABLE IF NOT EXISTS tickets (
+                ticket_id INTEGER PRIMARY KEY,
+                customer_name TEXT NOT NULL,
+                message TEXT NOT NULL,
+                category TEXT NOT NULL,
+                priority TEXT NOT NULL,
+                status TEXT NOT NULL
+                )
+            """)
+
 
 def add_ticket(ticket):
+    with create_connection() as connection:
+        connection.execute("""
+            INSERT INTO tickets
+            (ticket_id, customer_name, message, category, priority, status)
+            VALUES (%s, %s, %s, %s, %s, %s)
+        """, (
+            ticket.ticket_id,
+            ticket.customer_name,
+            ticket.message,
+            ticket.category,
+            ticket.priority,
+            ticket.status
+        ))
 
-    connection = create_connection()
-    cursor = connection.cursor()
-
-    cursor.execute("""
-        INSERT INTO tickets
-        (ticket_id, customer_name, message, category, priority, status)
-        VALUES (?, ?, ?, ?, ?, ?)
-    """, (
-        ticket.ticket_id,
-        ticket.customer_name,
-        ticket.message,
-        ticket.category,
-        ticket.priority,
-        ticket.status
-    ))
-
-    connection.commit()
-    connection.close()
 
 def get_all_tickets():
-
-    connection = create_connection()
-    cursor = connection.cursor()
-
-    cursor.execute("SELECT * FROM tickets")
-
-    tickets = cursor.fetchall()
-
-    connection.close()
-
-    return tickets
+    with create_connection() as connection:
+        cursor = connection.execute("SELECT * FROM tickets")
+        return cursor.fetchall()
 
 
 def get_ticket(ticket_id):
+    with create_connection() as connection:
+        cursor = connection.execute(
+            "SELECT * FROM tickets WHERE ticket_id = %s",
+            (ticket_id,)
+        )
 
-    connection = create_connection()
-    cursor = connection.cursor()
-
-    cursor.execute(
-        "SELECT * FROM tickets WHERE ticket_id = ?",
-        (ticket_id,)
-    )
-
-    ticket = cursor.fetchone()
-
-    connection.close()
-
-    return ticket
+        return cursor.fetchone()
 
 
 def update_ticket_status(ticket_id, new_status):
+    with create_connection() as connection:
+        cursor = connection.execute(
+            "UDATE FROM tickets WHERE ticket_id = %s",
+            (new_status, ticket_id)
 
-    connection = create_connection()
-    cursor = connection.cursor()
+        )
+        return cursor.rowcount
 
-    cursor.execute(
-        """
-        UPDATE tickets
-        SET status = ?
-        WHERE ticket_id = ?
-    """,
-    (new_status, ticket_id)
-    )
-
-    connection.commit()
-
-    rows_updated = cursor.rowcount
-
-    connection.close()
-
-    return rows_updated
 
 def delete_ticket(ticket_id):
-
-    connection = create_connection()
-    cursor = connection.cursor()
-
-    cursor.execute(
-        "DELETE FROM tickets WHERE ticket_id = ?", 
-        (ticket_id,)
+    with create_connection as connection:
+        cursor = connection.execute(
+            "DELETE FROM tickets WHERE ticket_id = %s",
+            (ticket_id,)
         )
 
-    connection.commit()
-
-    rows_deleted = cursor.rowcount
-
-    connection.close()
-
-    return rows_deleted
+        return cursor.rowcount
 
 def ticket_exists(ticket_id):
+    with create_connection as connection:
+        cursor = connection.execute(
+            "SELECT 1 FROM tickets WHERE ticket_id = %s",
+            (ticket_id)
+        )
 
-    connection = create_connection()
-    cursor = connection.cursor()
+        return cursor.fetchone() is not None
 
-
-    cursor.execute(
-        "SELECT 1 FROM tickets WHERE ticket_id = ?",
-        (ticket_id,)
-    )
-
-    ticket = cursor.fetchone()
-
-    connection.close()
-
-    return ticket is not None
+create_table()
