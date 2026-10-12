@@ -1,5 +1,7 @@
-import os 
+
+import os
 import psycopg
+
 
 DATABASE_URL = os.environ.get("DATABASE_URL")
 
@@ -23,8 +25,8 @@ def create_table():
                 category TEXT NOT NULL,
                 priority TEXT NOT NULL,
                 status TEXT NOT NULL
-                )
-            """)
+            )
+        """)
 
 
 def add_ticket(ticket):
@@ -45,7 +47,9 @@ def add_ticket(ticket):
 
 def get_all_tickets():
     with create_connection() as connection:
-        cursor = connection.execute("SELECT * FROM tickets")
+        cursor = connection.execute(
+            "SELECT * FROM tickets ORDER BY ticket_id"
+        )
         return cursor.fetchall()
 
 
@@ -55,22 +59,22 @@ def get_ticket(ticket_id):
             "SELECT * FROM tickets WHERE ticket_id = %s",
             (ticket_id,)
         )
-
         return cursor.fetchone()
 
 
 def update_ticket_status(ticket_id, new_status):
     with create_connection() as connection:
-        cursor = connection.execute(
-            "UDATE FROM tickets WHERE ticket_id = %s",
-            (new_status, ticket_id)
+        cursor = connection.execute("""
+            UPDATE tickets
+            SET status = %s
+            WHERE ticket_id = %s
+        """, (new_status, ticket_id))
 
-        )
         return cursor.rowcount
 
 
 def delete_ticket(ticket_id):
-    with create_connection as connection:
+    with create_connection() as connection:
         cursor = connection.execute(
             "DELETE FROM tickets WHERE ticket_id = %s",
             (ticket_id,)
@@ -78,13 +82,15 @@ def delete_ticket(ticket_id):
 
         return cursor.rowcount
 
+
 def ticket_exists(ticket_id):
-    with create_connection as connection:
+    with create_connection() as connection:
         cursor = connection.execute(
             "SELECT 1 FROM tickets WHERE ticket_id = %s",
-            (ticket_id)
+            (ticket_id,)
         )
 
         return cursor.fetchone() is not None
+
 
 create_table()
