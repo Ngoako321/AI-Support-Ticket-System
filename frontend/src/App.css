@@ -1,0 +1,181 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: Inter, Arial, sans-serif;
+  background: #f5f6f8;
+  color: #14213d;
+}
+
+button {
+  font: inherit;
+  cursor: pointer;
+}
+
+.app {
+  min-height: 100vh;
+}
+
+.sidebar {
+  width: 250px;
+  background: #14213d;
+  color: #ffffff;
+  padding: 30px 20px;
+  position: fixed;
+  inset: 0 auto 0 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.logo {
+  font-size: 25px;
+  margin: 0 0 45px;
+}
+
+.logo span {
+  color: #e63946;
+}
+
+.menu-label {
+  color: #9ba8c4;
+  font-size: 11px;
+  letter-spacing: 1.5px;
+  margin-bottom: 15px;
+}
+
+.sidebar nav {
+  display: grid;
+  gap: 8px;
+
+}
+
+.nav-link.active,
+.nav-link:hover {
+  background: #3a4468;
+  color: #ffffff;
+}
+
+.sidebar-footer {
+  margin-top: auto;
+  border-top: 1px solid #3a4468;
+  padding-top: 22px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.avatar {
+  width: 40px;
+  height: 40px;
+  background: #e63946;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  font-weight: bold;
+}
+
+.sidebar-footer strong {
+  font-size: 13px;
+}
+
+.sidebar-footer p {
+  color: #b7c0d2;
+  margin: 5px 0 0;
+  font-size: 12px;
+}
+
+.main-content {
+  margin-left: 250px;
+  padding: 35px;
+}
+
+.topbar,
+.welcome,
+.panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.breadcrumb,
+.eyebrow {
+  color: #68738a;
+  font-size: 13px;
+}
+
+.topbar h1 {
+  margin: 8px 0 28px;
+  font-size: 30px;
+}
+
+.status-indicator {
+  background: #e3f7eb;
+  color: #187747;
+  border-radius: 20px;
+  padding: 9px 13px;
+  font-size: 12px;
+}
+
+.welcome {
+  background: #ffffff;
+  border: 1px solid #e3e6ed;
+  border-radius: 14px;
+  padding: 28px;
+  margin-bottom: 25px;
+}
+
+.eyebrow {
+  font-weight: bold;
+  letter-spacing: 1px;
+  font-size: 11px;
+}
+
+.welcome h2 {
+  font-size: 24px;
+  margin: 10px 0;
+}
+
+.welcome p:last-child,
+.panel-header p {
+  color: #68738a;
+  font-size: 14px;
+  margin-bottom: 0;
+
+}
+
+.primary-button {
+  background: #e63946;
+  color:  #ffffff;
+  border: none;
+  border-radius: 8px;
+  padding: 13px 18px;
+
+}
+
+.primary-button:hover {
+  background: #c1121f;
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 18px;
+  margin-bottom: 25px;
+}
+
+.stat-card {
+  background: #ffffff;
+  border: 1px solid #e3e6ed;
+  border-radius: 12px;
+  padding: 22px;
+
+}
+
+.stat-card p {
+  color: #68738a;
+  font-size: 13px;
+  margin-top: 0;
+}
