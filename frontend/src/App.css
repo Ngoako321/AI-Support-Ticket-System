@@ -2,6 +2,10 @@
   box-sizing: border-box;
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
 body {
   margin: 0;
   font-family: Inter, Arial, sans-serif;
@@ -13,11 +17,11 @@ button {
   font: inherit;
   cursor: pointer;
 }
-
 .app {
   min-height: 100vh;
 }
 
+/* ---------- Sidebar ---------- */
 .sidebar {
   width: 250px;
   background: #14213d;
@@ -48,7 +52,16 @@ button {
 .sidebar nav {
   display: grid;
   gap: 8px;
+}
 
+.nav-link {
+  display: block;
+  color: #b7c0d2;
+  text-decoration: none;
+  font-size: 14px;
+  padding: 12px 14px;
+  border-radius: 8px;
+  transition: background 0.2s, color 0.2s;
 }
 
 .nav-link.active,
@@ -86,6 +99,7 @@ button {
   font-size: 12px;
 }
 
+/* ---------- Main layout ---------- */
 .main-content {
   margin-left: 250px;
   padding: 35px;
@@ -119,6 +133,7 @@ button {
   font-size: 12px;
 }
 
+/* ---------- Welcome card ---------- */
 .welcome {
   background: #ffffff;
   border: 1px solid #e3e6ed;
@@ -131,6 +146,7 @@ button {
   font-weight: bold;
   letter-spacing: 1px;
   font-size: 11px;
+  margin: 0;
 }
 
 .welcome h2 {
@@ -143,22 +159,36 @@ button {
   color: #68738a;
   font-size: 14px;
   margin-bottom: 0;
-
 }
 
+/* ---------- Buttons ---------- */
 .primary-button {
   background: #e63946;
-  color:  #ffffff;
+  color: #ffffff;
   border: none;
   border-radius: 8px;
   padding: 13px 18px;
-
+  transition: background 0.2s;
 }
 
 .primary-button:hover {
   background: #c1121f;
 }
 
+.secondary-button {
+  background: #ffffff;
+  color: #14213d;
+  border: 1px solid #d5d9e3;
+  border-radius: 8px;
+  padding: 10px 16px;
+  transition: background 0.2s;
+}
+
+.secondary-button:hover {
+  background: #f5f6f8;
+}
+
+/* ---------- Stats ---------- */
 .stats-grid {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -171,11 +201,110 @@ button {
   border: 1px solid #e3e6ed;
   border-radius: 12px;
   padding: 22px;
-
 }
 
 .stat-card p {
   color: #68738a;
   font-size: 13px;
   margin-top: 0;
+}
+
+.stat-card h3 {
+  font-size: 32px;
+  margin: 8px 0;
+}
+
+.stat-card span {
+  color: #68738a;
+  font-size: 12px;
+}
+
+/* ---------- Tickets panel ---------- */
+.tickets-panel {
+  background: #ffffff;
+  border: 1px solid #e3e6ed;
+  border-radius: 14px;
+  padding: 28px;
+}
+
+.panel-header {
+  margin-bottom: 24px;
+}
+
+.panel-header h2 {
+  margin: 0 0 6px;
+  font-size: 20px;
+}
+
+/* ---------- Empty state ---------- */
+.empty-state {
+  text-align: center;
+  padding: 50px 20px;
+  border: 1px dashed #d5d9e3;
+  border-radius: 12px;
+}
+
+.empty-icon {
+  width: 56px;
+  height: 56px;
+  margin: 0 auto 16px;
+  border-radius: 50%;
+  background: #eef0f5;
+}
+
+.empty-state h3 {
+  margin: 0 0 8px;
+  font-size: 18px;
+}
+
+.empty-state p {
+  max-width: 380px;
+  margin: 0 auto;
+  color: #68738a;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+/* ---------- Accessibility ---------- */
+.nav-link:focus-visible,
+button:focus-visible {
+  outline: 2px solid #e63946;
+  outline-offset: 2px;
+}
+
+/* ---------- Responsive ---------- */
+@media (max-width: 900px) {
+  .sidebar {
+    position: static;
+    width: 100%;
+  }
+
+  .logo {
+    margin-bottom: 25px;
+  }
+
+  .sidebar-footer {
+    margin-top: 25px;
+  }
+
+  .main-content {
+    margin-left: 0;
+    padding: 24px 18px;
+  }
+
+  .stats-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 560px) {
+  .stats-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .welcome,
+  .topbar {
+    flex-direction: column;
+    align-items: flex-start;
+  }
 }

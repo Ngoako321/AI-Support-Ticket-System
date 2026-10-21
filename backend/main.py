@@ -1,10 +1,25 @@
 from fastapi import FastAPI, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
-from ticket import Ticket
-from manager import TicketManager
-from database import (add_ticket, get_all_tickets, get_ticket, update_ticket_status as update_status_in_database, delete_ticket as delete_ticket_from_database, ticket_exists, create_table)
+from backend.ticket import Ticket
+from backend.manager import TicketManager
+from backend.database import (add_ticket, get_all_tickets, get_ticket, update_ticket_status as update_status_in_database, delete_ticket as delete_ticket_from_database, ticket_exists, create_table)
 
 app = FastAPI()
+
+
+# allows the frontend to communicate with API
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=[
+        "http://localhost:5173",
+        "http://127.0.0.1:5173",
+    ],
+    allow_credentials=False,
+    allow_methods=["*"],
+    allow_headers=["*"]
+)
 
 manager = TicketManager()
 
