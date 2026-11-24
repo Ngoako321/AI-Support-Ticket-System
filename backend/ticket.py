@@ -1,5 +1,4 @@
-from analyzer import TicketAnalyzer
-
+from backend.analyzer import TicketAnalyzer
 class Ticket:
 
 
@@ -38,31 +37,10 @@ class Ticket:
 
     def analyze_ticket(self):
 
-        message = self.message.lower()
+        analyzer = TicketAnalyzer()
 
-        # category
-
-        if "charged" in message or "payment" in message or "refund" in message:
-            self.category = "Payments"
-
-        elif "login" in message or "log in" in message or "password" in message:
-            self.category = "Account"
-
-        elif "error" in message or "broken" in message:
-            self.category = "Technical"
-
-        else:
-            self.category = "Other"
-
-
-
-        #priority
-
-        if ("charged" in message or "fraud" in message or "stolen" in message or "blocked" in message):
-            self.priority = "High"
-
-        else:
-            self.priority = "Low"
+        self.category = analyzer.analyze(self.message)
+        self.priority = analyzer.analyze_priority(self.message)
 
 
 

@@ -1,12 +1,17 @@
-
 import os
 import psycopg
+from dotenv import load_dotenv
+from pathlib import Path
 
+env_path = Path(__file__).resolve().parent.parent / ".env"
+
+load_dotenv(dotenv_path=env_path)
 
 DATABASE_URL = os.environ.get("DATABASE_URL")
 
 
 def create_connection():
+
     if not DATABASE_URL:
         raise RuntimeError(
             "DATABASE_URL environment variable is not configured."
@@ -92,5 +97,3 @@ def ticket_exists(ticket_id):
 
         return cursor.fetchone() is not None
 
-
-create_table()

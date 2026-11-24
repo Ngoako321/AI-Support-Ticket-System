@@ -1,4 +1,4 @@
 fastapi
-uvicorn
-pydantic
+uvicorn[standard]
 psycopg[binary]
+python-dotenv
