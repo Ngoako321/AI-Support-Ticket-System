@@ -4,6 +4,7 @@ from pydantic import BaseModel
 from backend.ticket import Ticket
 from backend.manager import TicketManager
 from backend.database import (add_ticket, get_all_tickets, get_ticket, update_ticket_status as update_status_in_database, delete_ticket as delete_ticket_from_database, ticket_exists, create_table)
+from collections import Counter
 
 app = FastAPI()
 
@@ -91,6 +92,84 @@ def get_tickets():
 
     return results
 
+@app.get("/insights")
+def get_ticket_insights():
+
+    tickets = get_all_tickets()
+
+    total = len(tickets)
+
+    if total == 0:
+        return {
+            "total": 0,
+            "high_priority": 0,
+            "top_category": "None",
+            "resolution_rate": 0,
+            "categories": {},
+            "recommendations": [
+                "No tickets available for analysis yet."
+            ]           
+        }
+
+    # count ticket priorities
+
+    high_priority = sum(
+        1 for ticket in tickets
+        if ticket[4] == "High"
+    )
+
+    # count ticket statuses
+
+    resolved = sum(
+        1 for ticket in  tickets
+        if ticket[5] == "Resolved"
+    )
+
+    resolution_rate = round((resolved / total) * 100,1 )
+
+    # analyse ticket categories
+
+    category_counts = Counter(
+        ticket[3] for ticket in tickets
+    )
+
+    top_category = category_counts.most_common(1)[0][0]
+
+    # generate recommendations
+
+    recommendations = []
+
+    if high_priority > 0:
+        recommendations.append(
+            f"You have {high_priority} high-priority ticket(s). "
+            "Prioritise these requests for faster support."
+        )
+
+    if resolution_rate < 50:
+        recommendations.append(
+            "Your resolution rate is below 50%."
+            "Review unresolved tickets to improve customer satisfaction."
+        )
+
+    if category_counts[top_category] > 1:
+        recommendations.append(
+            f"{top_category} is your most common ticket category. "
+            "Investigate recurring issues in this area."
+        )
+
+    if not recommendations:
+        recommendations.append(
+            "Support performance looks good. Continue monitoring incoming tickets."
+        )
+
+    return {
+        "total": total,
+        "high_priority": high_priority,
+        "top_category": top_category,
+        "resolution_rate": resolution_rate,
+        "categories": dict(category_counts),
+        "recommendations":recommendations
+    }
 
 @app.get("/tickets/{ticket_id}")
 def get_single_ticket(ticket_id: int):
