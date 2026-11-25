@@ -24,21 +24,22 @@
       <div class="sidebar-section">
         <p class="sidebar-label">WORKSPACE</p>
 
-        <a href="#" class="nav-link active">
-          <i class="fa-solid fa-chart-pie"></i>
-          <span>Overview</span>
-        </a>
 
-        <a href="#" class="nav-link">
-          <i class="fa-solid fa-ticket"></i>
-          <span>All Tickets</span>
-          <span class="nav-count" id="ticket-count">0</span>
-        </a>
-
-        <a href="#" class="nav-link">
-          <i class="fa-solid fa-chart-line"></i>
-          <span>AI Insights</span>
-        </a>
+      <a href="#" class="nav-link active" id="overview-nav-link">
+        <i class="fa-solid fa-chart-pie"></i>
+        <span>Overview</span>
+      </a>
+      
+      <a href="#" class="nav-link" id="tickets-nav-link">
+        <i class="fa-solid fa-ticket"></i>
+        <span>All Tickets</span>
+        <span class="nav-count" id="ticket-count">0</span>
+      </a>
+      
+      <a href="#" class="nav-link" id="insights-nav-link">
+        <i class="fa-solid fa-chart-line"></i>
+        <span>AI Insights</span>
+      </a>
 
       </div>
 
@@ -77,7 +78,7 @@
       </header>
 
       <!-----Dashboard---->
-      <section class="dashboard">
+      <section class="dashboard" id="overview">
 
         <div class="page-heading">
           
@@ -173,8 +174,88 @@
             </table>
           </div>
         </div>
+        
       </section>
+      
+      <section class="dashboard is-hidden" id="ai-insights">
+        <div class="page-heading">
+          <div>
+            <h1>AI Insights</h1>
+            <p>Understand ticket trends and improve customer support.</p>
+          </div>
 
+          <button class="secondary-button" id="refresh-insights">
+            <i class="fa-solid fa-rotate"></i>
+            Refresh Insights
+          </button>
+        </div>
+
+        <!-- Insight statistics -->
+        <div class="stats-grid">
+
+          <div class="stat-card">
+            <div class="stat-icon red">
+              <i class="fa-solid fa-triangle-exclamation"></i>
+            </div>
+            <p>High Priority</p>
+            <h2 id="insight-high">0</h2>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-icon purple">
+              <i class="fa-solid fa-layer-group"></i>
+            </div>
+            <p>Top Category</p>
+            <h2 id="insight-category">-</h2>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-icon green">
+              <i class="fa-solid fa-chart-pie"></i>
+            </div>
+            <p>Resolution Rate</p>
+            <h2 id="insight-resolution">0%</h2>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-icon blue">
+              <i class="fa-solid fa-chart-line"></i>
+            </div>
+            <p>Total Analysed</p>
+            <h2 id="insight-total">0</h2>
+          </div>
+        </div>
+
+      <!--Category analysis-->
+
+      <div class="tickets-section">
+        <div class="section-heading">
+          <div>
+            <h2>Ticket Category Analysis</h2>
+            <p>See which issues customers report most frequently.</p>
+          </div>
+        </div>
+
+        <div id="category-analysis" style="padding: 20px;">
+          Loading category analysis...
+        </div>
+      </div>
+
+      <!---AI Recommendations-->
+        <div class="tickets-section" style="margin-top: 25px;">
+          <div class="section-heading">
+            <div>
+              <h2><i class="fa-solid fa-wand-magic-sparkles"></i> AI Recommendations</h2>
+              <p>Suggested actions based on your ticket data.</p>
+            </div>
+          </div>
+
+          <div id="ai-recommendations" style="padding: 20px;">
+            Analysing support tickets...
+          </div>
+        </div>
+
+    </section>
     </main>
   </div>
 

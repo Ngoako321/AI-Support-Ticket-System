@@ -1,17 +1,23 @@
-const API_BASE_URL = "https://violet-ai-backend.onrender.com" ;
+const API_BASE_URL = "https://violet-ai-backend.onrender.com";
 
 // dash elements
 
 const ticketTableBody = document.getElementById("ticket-table-body");
 const apiStatus = document.getElementById("api-status");
 const ticketCount = document.getElementById("ticket-count");
-
 const statTotal = document.getElementById("stat-total");
 const statOpen = document.getElementById("stat-open");
 const statProgress = document.getElementById("stat-progress");
 const statResolved = document.getElementById("stat-resolved");
-
 const openModalButton = document.getElementById("open-ticket-modal");
+
+// Ai insights element
+const insightHigh = document.getElementById("insight-high");
+const insightCategory = document.getElementById("insight-category");
+const insightResolution = document.getElementById("insight-resolution");
+const insightTotal = document.getElementById("insight-total");
+const categoryAnalysis = document.getElementById("category-analysis");
+const recommendationsContainer = document.getElementById("ai-recommendations");
 
 let tickets = []
 
@@ -26,7 +32,7 @@ function setApiStatus(connected, message) {
     const dot = statusContainer?.querySelector(".status-dot");
 
     if (dot) {
-        dot.computedStyleMap.backgroundColor = connected ? "#4adea1" : "#f87171";
+        dot.style.backgroundColor = connected ? "#4adea1" : "#f87171";
     }
 }
 
@@ -65,6 +71,7 @@ async function loadTickets() {
 
         displayTickets();
         updateStatistics();
+        await loadInsights();
     }
     catch (error) {
         console.error("Could not load tickets:", error);
@@ -354,4 +361,152 @@ window.deleteTicket = deleteTicket;
 
 
 // load tickets when the page opens
-document.addEventListener("DOMContentLoaded", loadTickets);
+document.addEventListener("DOMContentLoaded", () => {
+    loadTickets();
+    loadInsights();
+});
+
+
+// load ai insight from backend
+async function loadInsights() {
+
+    try {
+        const response = await fetch(`${API_BASE_URL}/insights`);
+
+        if (!response.ok) {
+            throw new Error("Could not load AI Insights.");
+        }
+
+        const data = await response.json();
+
+        // Update insight statistics
+        insightHigh.textContent = data.high_priority;
+        insightCategory.textContent = data.top_category;
+        insightResolution.textContent = `${data.resolution_rate}%`;
+        insightTotal.textContent = data.total;
+
+        // Display category analysis
+        categoryAnalysis.innerHTML = "";
+
+        Object.entries(data.categories).forEach(([category, count]) => {
+
+            const percentage = data.total > 0
+                ? (count / data.total) * 100
+                : 0;
+
+            const categoryItem = document.createElement("div");
+            categoryItem.className = "category-item";
+
+            categoryItem.innerHTML = `
+                <div class="category-info">
+                    <strong>${escapeHTML(category)}</strong>
+                    <span>${count} tickets</span>
+                </div>
+
+                <div class="category-bar">
+                    <div class="category-bar-fill"
+                         style="--bar-width: ${percentage}%;">
+                    </div>
+                </div>
+            `;
+
+            categoryAnalysis.appendChild(categoryItem);
+        });
+
+        // Display recommendations
+        recommendationsContainer.innerHTML = "";
+
+        data.recommendations.forEach(recommendation => {
+
+            const recommendationCard = document.createElement("div");
+            recommendationCard.className = "recommendation-card";
+
+            recommendationCard.innerHTML = `
+                <i class="fa-solid fa-lightbulb"></i>
+                <p></p>
+            `;
+
+            recommendationCard.querySelector("p").textContent = recommendation;
+
+            recommendationsContainer.appendChild(recommendationCard);
+        });
+
+    } catch (error) {
+        console.error("Could not load AI Insights:", error);
+
+        categoryAnalysis.textContent = "Unable to load category analysis.";
+        recommendationsContainer.textContent = "Unable to load recommendations.";
+    }
+}
+
+// Refresh AI Insights
+const refreshInsightsButton = document.getElementById("refresh-insights");
+
+if (refreshInsightsButton) {
+    refreshInsightsButton.addEventListener("click", loadInsights);
+}
+
+
+// Dashboard navigation
+
+const overviewSection = document.getElementById("overview");
+const insightsSection = document.getElementById("ai-insights");
+
+const overviewNav = document.getElementById("overview-nav-link");
+const ticketsNav = document.getElementById("tickets-nav-link");
+const insightsNav = document.getElementById("insights-nav-link");
+
+const breadcrumb = document.querySelector(".breadcrumb");
+
+
+function showSection(section, activeLink, pageName) {
+
+    //hide all dashboard sections
+    overviewSection.classList.add("is-hidden");
+    insightsSection.classList.add("is-hidden");
+
+    // display selected section
+    section.classList.remove("is-hidden");
+
+    //remove active navigation styling
+    document.querySelectorAll(".nav-link").forEach(link => {
+        link.classList.remove("active");
+    });
+
+    //highlight selected navigation link
+    activeLink.classList.add("active");
+
+    // update breadcrumb
+    breadcrumb.textContent = `Workspace / ${pageName}`;
+}
+
+
+//overview navigation
+overviewNav.addEventListener("click", event => {
+    event.preventDefault();
+
+    showSection(overviewSection, overviewNav, "Overview");
+});
+
+
+// all tickets navigation
+ticketsNav.addEventListener("click", event => {
+    event.preventDefault();
+
+    showSection(overviewSection, ticketsNav, "All Tickets");
+
+    document.querySelector(".table-container").scrollIntoView({
+        behavior: "smooth",
+        block: "start"
+    });
+});
+
+
+// 
+insightsNav.addEventListener("click", event => {
+    event.preventDefault();
+
+    showSection(insightsSection, insightsNav, "AI Insights");
+
+    loadInsights();
+});

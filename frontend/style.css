@@ -378,6 +378,75 @@ icon-button {
 }
 
 
+/* for ai insights */
+.category-analysis {
+    padding: 20px;
+}
+
+.category-item {
+    margin-bottom: 20px;
+}
+
+.category-info {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 8px;
+    font-size: 13px;
+}
+
+.category-info span {
+    color: var(--text-muted);
+}
+
+.category-bar {
+    height: 8px;
+    background: var(--border);
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.category-bar-fill {
+    width: var(--bar-width, 0%);
+    height: 100%;
+    background: var(--primary);
+    border-radius: 10px;
+    transition: width 0.4s ease;
+}
+
+/* AI Recommendations */
+
+.recommendations-section {
+    margin-top: 25px;
+}
+
+.ai-recommendations {
+    padding: 20px;
+}
+
+.recommendation-card {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 16px;
+    margin-bottom: 12px;
+    background: var(--panel-hover);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+}
+
+.recommendation-card i {
+    color: var(--primary-light);
+    margin-top: 3px;
+}
+
+.recommendation-card p {
+    color: var(--text);
+    font-size: 13px;
+    line-height: 1.6;
+    margin: 0;
+}
+
+
 /* Tickets Section */
 
 .tickets-section {
@@ -447,6 +516,12 @@ td {
   border-bottom: 1px solid var(--border);
   font-size: 12px; 
 }
+
+/* navigation*/
+.is-hidden {
+  display: none !important;
+}
+
 /* --- Responsive Design --- */
 
 @media (max-width: 900px) {
