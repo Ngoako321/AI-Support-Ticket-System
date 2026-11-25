@@ -302,4 +302,4 @@ Run the complete test suite:
 python -m pytest -v
 ```
 
-### Test
+### Tests
